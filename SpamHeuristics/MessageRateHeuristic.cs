@@ -22,7 +22,7 @@ namespace LOIBC.SpamHeuristics
                 _messages.Enqueue(sentMessage);
             }
 
-            return _messages.AsEnumerable().Count(d => d.User == sentMessage.User) * 0.5f + 
+            return _messages.AsEnumerable().Count(d => d.User == sentMessage.User) * 0.25f + 
                    _messages.AsEnumerable().Count(d => d.Text == sentMessage.Text);
         }
     }

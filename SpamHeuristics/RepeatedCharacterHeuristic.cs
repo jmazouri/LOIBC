@@ -10,7 +10,7 @@ namespace LOIBC.SpamHeuristics
     {
         public override float CalculateSpamValue(Message sentMessage, bool keepCached = true)
         {
-            return ((float)sentMessage.Text.GroupBy(d=>d).Max(d=>d.Count()) / (sentMessage.Text.Length)) * sentMessage.Text.Length * 0.5f;
+            return sentMessage.Text.GroupBy(d => d).Max(d => d.Count()) * 0.5f;
         }
     }
 }
