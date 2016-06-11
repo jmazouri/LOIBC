@@ -17,6 +17,11 @@ namespace LOIBC
             Limit = limit;
         }
 
+        public IEnumerable<T> AsEnumerable()
+        {
+            return _q.AsEnumerable();
+        }
+
         public void Enqueue(T obj)
         {
             _q.Enqueue(obj);
