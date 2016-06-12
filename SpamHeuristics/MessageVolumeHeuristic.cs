@@ -6,11 +6,11 @@ using Discord;
 
 namespace LOIBC.SpamHeuristics
 {
-    public class MessageRateHeuristic : SpamHeuristic
+    public class MessageVolumeHeuristic : SpamHeuristic
     {
         private FixedSizedQueue<Message> _messages;
 
-        public MessageRateHeuristic(int maxMessageHistory = 25)
+        public MessageVolumeHeuristic(int maxMessageHistory = 25)
         {
             _messages = new FixedSizedQueue<Message>(maxMessageHistory);
         }
