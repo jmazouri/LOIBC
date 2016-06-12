@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace LOIBC
 {
@@ -34,7 +35,7 @@ namespace LOIBC
 
         private void MessageReceived(object sender, MessageEventArgs e)
         {
-            Console.WriteLine($"{e.Message.User.Name}: {e.Message.Text}");
+            Log.Logger.Verbose("{user}: {message}", e.Message.User.Name, e.Message.Text);
             _rateMonitor.Analyze(e.Message);
         }
     }

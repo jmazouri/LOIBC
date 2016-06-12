@@ -10,7 +10,10 @@
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.0-rc2-3002702"
-    }
+    },
+    "Serilog": "2.0.0-rc-*",
+    "Serilog.Sinks.File": "2.0.0-rc-706",
+    "Serilog.Sinks.Literate": "2.0.0-rc-*"
   },
   "frameworks": {
     "netcoreapp1.0": {

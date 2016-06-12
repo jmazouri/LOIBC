@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using LOIBC.SpamHeuristics;
+using Serilog;
 
 namespace LOIBC
 {
@@ -13,17 +14,19 @@ namespace LOIBC
         {
             new LongMessageBodyHeuristic(),
             new MessageRateHeuristic(5),
-            new RepeatedCharacterHeuristic()
+            new RepeatedCharacterHeuristic(),
+            new CapitalLetterHeuristic()
         };
 
         public void Analyze(Message message)
         {
-            Console.WriteLine($"Last message had a spam rating of : {_heuristicGroup.CalculateSpamValue(message)}");
+            Log.Logger.Information("Message from {user} had a spam rating of : {rating} ({heuristictype})", 
+                message.User.Name, _heuristicGroup.CalculateSpamValue(message), _heuristicGroup.AggregateMethod);
 
             foreach (SpamHeuristic heuristic in _heuristicGroup)
             {
-                Console.WriteLine($"\t {heuristic.GetType().Name}: {heuristic.CalculateSpamValue(message, false)} " +
-                                  $"(Weight: {_heuristicGroup.Heuristics[heuristic]})");
+                Log.Logger.Information("\t {heuristic}: {rating} ({weight}wt)", 
+                    heuristic.GetType().Name, heuristic.CalculateSpamValue(message, false), _heuristicGroup.Heuristics[heuristic]);
             }
         }
     }

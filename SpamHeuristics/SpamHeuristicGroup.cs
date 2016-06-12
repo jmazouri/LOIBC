@@ -16,13 +16,13 @@ namespace LOIBC.SpamHeuristics
 
     public class SpamHeuristicGroup : SpamHeuristic, IEnumerable<SpamHeuristic>
     {
-        public Dictionary<SpamHeuristic, float> Heuristics;
-        private HeuristicAggregateMethod _aggregateMethod;
+        public Dictionary<SpamHeuristic, float> Heuristics { get; private set; }
+        public HeuristicAggregateMethod AggregateMethod { get; set; }
 
         public SpamHeuristicGroup(HeuristicAggregateMethod aggregateMethod = HeuristicAggregateMethod.Sum)
         {
             Heuristics = new Dictionary<SpamHeuristic, float>();
-            _aggregateMethod = aggregateMethod;
+            AggregateMethod = aggregateMethod;
         }
 
         public SpamHeuristicGroup(HeuristicAggregateMethod aggregateMethod, params SpamHeuristic[] heuristics)
@@ -37,7 +37,7 @@ namespace LOIBC.SpamHeuristics
 
         public override float CalculateSpamValue(Message sentMessage, bool keepCached = true)
         {
-            switch (_aggregateMethod)
+            switch (AggregateMethod)
             {
                 case HeuristicAggregateMethod.Sum:
                     return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);

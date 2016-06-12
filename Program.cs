@@ -3,6 +3,9 @@ using LOIBC;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Threading.Tasks;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace ConsoleApplication
 {
@@ -19,6 +22,11 @@ namespace ConsoleApplication
                     .AddJsonFile("appsettings.json")
                     .Build()
             );
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.LiterateConsole(LogEventLevel.Verbose)
+                .WriteTo.File(botConfig.LogPath, LogEventLevel.Information)
+                .CreateLogger();
 
             _bot = new LOIBCBot(botConfig);
             DoTasks();
