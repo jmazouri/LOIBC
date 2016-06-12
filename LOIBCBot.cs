@@ -35,7 +35,7 @@ namespace LOIBC
         private void MessageReceived(object sender, MessageEventArgs e)
         {
             Console.WriteLine($"{e.Message.User.Name}: {e.Message.Text}");
-            _rateMonitor.Add(e.Message);
+            _rateMonitor.Analyze(e.Message);
         }
     }
 }

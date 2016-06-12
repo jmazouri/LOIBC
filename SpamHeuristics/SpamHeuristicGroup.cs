@@ -7,16 +7,25 @@ using Discord;
 
 namespace LOIBC.SpamHeuristics
 {
+    public enum HeuristicAggregateMethod
+    {
+        Sum,
+        Average,
+        Max
+    }
+
     public class SpamHeuristicGroup : SpamHeuristic, IEnumerable<SpamHeuristic>
     {
         public Dictionary<SpamHeuristic, float> Heuristics;
+        private HeuristicAggregateMethod _aggregateMethod;
 
-        public SpamHeuristicGroup()
+        public SpamHeuristicGroup(HeuristicAggregateMethod aggregateMethod = HeuristicAggregateMethod.Sum)
         {
             Heuristics = new Dictionary<SpamHeuristic, float>();
+            _aggregateMethod = aggregateMethod;
         }
 
-        public SpamHeuristicGroup(params SpamHeuristic[] heuristics)
+        public SpamHeuristicGroup(HeuristicAggregateMethod aggregateMethod, params SpamHeuristic[] heuristics)
         {
             Heuristics = heuristics.ToDictionary(d=>d, d=> 1f);
         }
@@ -28,7 +37,17 @@ namespace LOIBC.SpamHeuristics
 
         public override float CalculateSpamValue(Message sentMessage, bool keepCached = true)
         {
-            return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage)*d.Value);
+            switch (_aggregateMethod)
+            {
+                case HeuristicAggregateMethod.Sum:
+                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                case HeuristicAggregateMethod.Average:
+                    return Heuristics.Average(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                case HeuristicAggregateMethod.Max:
+                    return Heuristics.Max(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                default:
+                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+            }
         }
 
         public IEnumerator<SpamHeuristic> GetEnumerator()
