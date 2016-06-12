@@ -23,14 +23,13 @@ namespace LOIBC
             }.Build();
 
             _client = new DiscordClient(discordConfig);
-
-            _rateMonitor = new MessageRateMonitor();
         }
 
         public async Task Connect()
         {
-            await _client.Connect(_config.BotKey);
             _client.MessageReceived += MessageReceived;
+            await _client.Connect(_config.BotKey);
+            _rateMonitor = new MessageRateMonitor(_client);
         }
 
         private void MessageReceived(object sender, MessageEventArgs e)

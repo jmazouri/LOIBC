@@ -15,7 +15,7 @@ namespace LOIBC.SpamTriggers
 
         public override void Trigger(DiscordClient client, Message message)
         {
-            message.User.Kick();
+            message.User.Kick().Wait();
         }
     }
 }

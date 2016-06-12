@@ -40,13 +40,13 @@ namespace LOIBC.SpamHeuristics
             switch (AggregateMethod)
             {
                 case HeuristicAggregateMethod.Sum:
-                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage, keepCached) * d.Value);
                 case HeuristicAggregateMethod.Average:
-                    return Heuristics.Average(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                    return Heuristics.Average(d => d.Key.CalculateSpamValue(sentMessage, keepCached) * d.Value);
                 case HeuristicAggregateMethod.Max:
-                    return Heuristics.Max(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                    return Heuristics.Max(d => d.Key.CalculateSpamValue(sentMessage, keepCached) * d.Value);
                 default:
-                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage) * d.Value);
+                    return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage, keepCached) * d.Value);
             }
         }
 
