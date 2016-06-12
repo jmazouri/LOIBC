@@ -34,6 +34,8 @@ namespace LOIBC
 
         private void MessageReceived(object sender, MessageEventArgs e)
         {
+            if (e.User.Id == _client.CurrentUser.Id) { return; }
+
             Log.Logger.Verbose("{user}: {message}", e.Message.User.Name, e.Message.Text);
             _rateMonitor.Analyze(e.Message);
         }

@@ -6,11 +6,12 @@ using Discord;
 
 namespace LOIBC.SpamTriggers
 {
-    public class KickTrigger : SpamTrigger
+    public class WarningTrigger : SpamTrigger
     {
         public override void Trigger(DiscordClient client, Message message)
         {
-            message.User.Kick().Wait();
+            message.User.SendMessage($"Warning: You are nearing spam limits for the server {message.Server.Name}")
+                .Wait();
         }
     }
 }

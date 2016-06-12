@@ -21,7 +21,14 @@ namespace LOIBC
 
         private readonly List<SpamTrigger> _triggers = new List<SpamTrigger>
         {
-            new KickTrigger()
+            new WarningTrigger
+            {
+                TriggerScore = 15
+            },
+            new KickTrigger
+            {
+                TriggerScore = 30
+            }
         };
 
         private readonly DiscordClient _client;
@@ -37,6 +44,8 @@ namespace LOIBC
             {
                 throw new InvalidOperationException("Discord client must be connected");
             }
+
+            _client = client;
         }
 
         public void Analyze(Message message)
