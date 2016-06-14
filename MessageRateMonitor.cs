@@ -5,23 +5,31 @@ using System.Threading.Tasks;
 using Discord;
 using LOIBC.SpamHeuristics;
 using LOIBC.SpamTriggers;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace LOIBC
 {
     public class MessageRateMonitor
     {
-        private readonly SpamHeuristicGroup _heuristicGroup = new SpamHeuristicGroup
+        public SpamHeuristicGroup Heuristics { get; set; } = new SpamHeuristicGroup
         {
-            new LongMessageBodyHeuristic(),
-            new MessageVolumeHeuristic(5),
-            new RepeatedCharacterHeuristic(),
-            new CapitalLetterHeuristic()
+            Heuristics = new Dictionary<SpamHeuristic, float>
+            {
+                { new LongMessageBodyHeuristic(), 1},
+                { new MessageVolumeHeuristic(5), 1},
+                { new RepeatedCharacterHeuristic(), 1},
+                { new CapitalLetterHeuristic(), 1}
+            }
         };
 
-        private readonly List<SpamTrigger> _triggers = new List<SpamTrigger>
+        public List<SpamTrigger> Triggers = new List<SpamTrigger>
         {
             new WarningTrigger
+            {
+                TriggerScore = 10
+            },
+            new DeleteTrigger
             {
                 TriggerScore = 15
             },
@@ -50,18 +58,18 @@ namespace LOIBC
 
         public void Analyze(Message message)
         {
-            float spamValue = _heuristicGroup.CalculateSpamValue(message);
+            float spamValue = Heuristics.CalculateSpamValue(message);
 
             Log.Logger.Information("Message from {user} had a spam rating of : {rating} ({heuristictype})", 
-                message.User.Name, spamValue, _heuristicGroup.AggregateMethod);
+                message.User.Name, spamValue, Heuristics.AggregateMethod);
 
-            foreach (SpamHeuristic heuristic in _heuristicGroup)
+            foreach (SpamHeuristic heuristic in Heuristics.Heuristics.Keys)
             {
                 Log.Logger.Information("\t {heuristic}: {rating} ({weight}wt)", 
-                    heuristic.GetType().Name, heuristic.CalculateSpamValue(message, false), _heuristicGroup.Heuristics[heuristic]);
+                    heuristic.GetType().Name, heuristic.CalculateSpamValue(message, false), Heuristics.Heuristics[heuristic]);
             }
 
-            foreach (SpamTrigger trigger in _triggers)
+            foreach (SpamTrigger trigger in Triggers.OrderByDescending(d=>d.TriggerScore))
             {
                 if (!trigger.ShouldTrigger(spamValue)) continue;
 
@@ -81,7 +89,10 @@ namespace LOIBC
                     Log.Logger.Error(ex, "Tried to perform trigger {trigger}, but got an error", trigger.GetType().Name);
                 }
 
-                break;
+                if (!trigger.PassThrough)
+                {
+                    break;
+                }
             }
         }
     }

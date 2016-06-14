@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Threading.Tasks;
 using Discord;
+using LOIBC.SpamHeuristics;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace LOIBC
@@ -12,6 +16,8 @@ namespace LOIBC
         private DiscordClient _client;
         private LOIBCConfig _config;
         private MessageRateMonitor _rateMonitor;
+
+        public IEnumerable<SpamHeuristic> SpamHeuristics => _rateMonitor.Heuristics.Heuristics.Select(d=>d.Key);
 
         public LOIBCBot(LOIBCConfig config)
         {
@@ -29,6 +35,7 @@ namespace LOIBC
         {
             _client.MessageReceived += MessageReceived;
             await _client.Connect(_config.BotKey);
+
             _rateMonitor = new MessageRateMonitor(_client);
         }
 

@@ -14,9 +14,9 @@ namespace LOIBC.SpamHeuristics
         Max
     }
 
-    public class SpamHeuristicGroup : SpamHeuristic, IEnumerable<SpamHeuristic>
+    public class SpamHeuristicGroup : SpamHeuristic
     {
-        public Dictionary<SpamHeuristic, float> Heuristics { get; private set; }
+        public Dictionary<SpamHeuristic, float> Heuristics { get; set; }
         public HeuristicAggregateMethod AggregateMethod { get; set; }
 
         public SpamHeuristicGroup(HeuristicAggregateMethod aggregateMethod = HeuristicAggregateMethod.Sum)
@@ -48,16 +48,6 @@ namespace LOIBC.SpamHeuristics
                 default:
                     return Heuristics.Sum(d => d.Key.CalculateSpamValue(sentMessage, keepCached) * d.Value);
             }
-        }
-
-        public IEnumerator<SpamHeuristic> GetEnumerator()
-        {
-            return Heuristics.Keys.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }
