@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>LOIBC Administration</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+        <style type="text/css">
+            body
+            {
+                font-family: Segoe UI;
+            }
+            h1
+            {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+
+    <body id="app">
+        <h1 v-for="Heuristic in Heuristics">{{Heuristic.Name}}</h1>
+
+        <script>
+            new Vue(
+            {
+                el: '#app',
+                created: function ()
+                {
+                    var thisVue = this;
+
+                    var oReq = new XMLHttpRequest();
+                    oReq.onload = function()
+                    {
+                        var parsedData = JSON.parse(oReq.response);
+
+                        thisVue.Heuristics = _.map(parsedData.SpamHeuristics, function (e)
+                        {
+                            var ret = _.clone(e);
+
+                            ret.Name = ret.$type
+                                .substring(ret.$type.lastIndexOf(".") + 1, ret.$type.indexOf(","))
+                                .replace("Heuristic", "");
+
+                            return ret;
+                        });
+                    };
+                    oReq.open("GET", "/data");
+                    oReq.send();
+                },
+                data:
+                {
+                    Heuristics: {}
+                }
+            });
+        </script>
+    </body>
+
+</html>
