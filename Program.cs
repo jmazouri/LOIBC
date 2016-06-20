@@ -34,7 +34,6 @@ namespace ConsoleApplication
             var webInterface = new LOIBCInterface("http://localhost:8080", _bot);
             Console.WriteLine("Web interface started.");
 
-
             Console.WriteLine("LOIBC Connected. Press any key to quit.");
             Console.ReadKey();
         }

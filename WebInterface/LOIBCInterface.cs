@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace LOIBC
 {
@@ -24,6 +25,7 @@ namespace LOIBC
         {
             _webhost = new WebHostBuilder()
                 .UseKestrel()
+                .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "WebInterface"))
                 .UseUrls(url)
                 .ConfigureServices(collection =>
                 {
@@ -57,30 +59,20 @@ namespace LOIBC
             // This method gets called by the runtime. Use this method to add services to the container.
             public void ConfigureServices(IServiceCollection services)
             {
-                
+                services.AddMvc();
             }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
             {
-                app.Run(async context =>
-                {
-                    if (context.Request.Path.StartsWithSegments(new PathString("/data")))
-                    {
-                        context.Response.Headers.Add("Content-Type", "application/json");
-                        context.Response.StatusCode = (int)HttpStatusCode.OK;
+                loggerFactory.AddSerilog();
 
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(_bot, new JsonSerializerSettings
-                        {
-                            Formatting = Formatting.Indented,
-                            TypeNameHandling = TypeNameHandling.Objects
-                        }));
-                    }
-                    else
-                    {
-                        await context.Response.WriteAsync(File.ReadAllText("WebInterface/wwwroot/index.html"));
-                    }
-                });
+                app.UseMvcWithDefaultRoute();
+                app.UseStaticFiles();
+
+                app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
+
             }
         }
     }

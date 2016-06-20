@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>LOIBC Administration</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+
+        <link href="/css/cutestrap.min.css" type="text/css" rel="stylesheet" />
+    </head>
+
+    <body id="app">
+        <section class="wrapper-large">
+            <div class="grid--large">
+                <h3 v-for="Heuristic in Heuristics">{{Heuristic}}</h3>
+            </div>
+        </section>
+
+        <script src="/js/main.js"></script>
+    </body>
+
+</html>

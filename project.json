@@ -1,11 +1,16 @@
 {
   "version": "1.0.0-*",
   "buildOptions": {
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
   },
   "dependencies": {
     "Discord.Net": "0.9.3.1",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Mvc.Formatters.Json": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
     "Microsoft.NETCore.App": {
@@ -14,6 +19,7 @@
     },
     "Newtonsoft.Json": "8.0.3",
     "Serilog": "2.0.0-rc-*",
+    "Serilog.Extensions.Logging": "1.0.0-rc2-10110",
     "Serilog.Sinks.File": "2.0.0-rc-706",
     "Serilog.Sinks.Literate": "2.0.0-rc-*"
   },
