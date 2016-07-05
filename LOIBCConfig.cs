@@ -9,11 +9,13 @@ namespace LOIBC
     public class LOIBCConfig
     {
         public string BotKey { get; set; }
+        public string ClientId { get; set; }
         public string LogPath { get; set; }
 
         public LOIBCConfig(IConfigurationRoot configRoot)
         {
             BotKey = configRoot["Discord:BotKey"];
+            ClientId = configRoot["Discord:ClientId"];
             LogPath = configRoot["LOIBC:LogPath"];
         }
     }

@@ -1,0 +1,284 @@
+﻿body
+{
+    min-width: 520px;
+}
+
+header
+{
+    padding: 1em;
+    box-shadow: 0px 16px 24px -16px black;
+}
+
+header:after
+{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+header .icon
+{
+    float: left;
+    padding-right: 0.5em;
+}
+
+header #right
+{
+    margin-top: -50px;
+    float: right;
+}
+
+.wrapper-large
+{
+    padding: 1em;
+    max-width: 100%;
+}
+
+.grid>.column--light
+{
+    flex-grow: 1;
+}
+
+section
+{
+    padding: 2.4rem 2rem;
+}
+
+#headerTitle
+{
+    font-size: 2.85em;
+    font-weight: bold;
+    height: auto;
+    line-height: 1em;
+}
+
+#headerSub
+{
+    font-size: 1.25em;
+}
+
+footer, footer a
+{
+    color: gray !important;
+}
+
+footer
+{
+    font-size: 0.75em;
+
+    border-top: 1px solid lightgray;
+    padding-top: 0.5em;
+    text-align: center;
+}
+
+nav ul
+{
+    list-style-type: none;
+    margin-left: 0;
+}
+
+nav ul li
+{
+    font-size: 1.5em;
+    display: inline;
+
+    padding: 0;
+    line-height: 1.5em;
+
+    border-bottom: 2px dotted lightgray;
+
+    cursor: pointer;
+}
+
+nav ul li:hover
+{
+    border-bottom-style: solid;
+}
+
+#logbox
+{
+    background: rgb(60, 60, 61);
+    color: #efeff0;
+
+    padding: 8px;
+    font-family: monospace;
+    line-height: 1em;
+
+    word-break: break-all;
+}
+
+#logbox .logentry
+{
+    cursor: pointer;
+    margin-bottom: 5px;
+
+    transition: all 0.1s ease-in-out;
+}
+
+#logbox .logentry.triggered
+{
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#logbox .logentry:hover
+{
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#logbox .logentry.triggered
+{
+    background: rgba(255, 50, 50, 0.25);
+}
+
+#logbox .logentry.triggered:hover
+{
+    background: rgba(255, 100, 100, 0.5);
+}
+
+#logbox .logdetail
+{
+    margin: 0.5em;
+}
+
+#logbox .timestamp
+{
+    color: lightgreen;
+}
+
+#logbox .sender
+{
+    color: white;
+}
+
+#logbox .message
+{
+    color: lightgray;
+}
+
+#logbox .spamvalue
+{
+    color: magenta;
+}
+
+#logbox .trigger
+{
+    color: white;
+}
+
+.serverRow img
+{
+    display: inline-block;
+    height: 48px;
+
+    border-radius: 8px;
+}
+
+.serverName
+{
+    font-size: 2em;
+
+    position: relative;
+    top: -8px;
+    left: 10px;
+}
+
+.super
+{
+    vertical-align: top;
+
+    background-color: #E83FB8;
+    color: #efeff0;
+
+    position: relative;
+    left: 8px;
+    top: -5px;
+
+    font-size: 0.75em;
+}
+
+.rounded
+{
+    padding: 2px 8px 4px 8px;
+    border-radius: 12px;
+}
+
+.serverChannel
+{
+    font-size: 0.75em;
+
+    display: inline-block;
+    margin: 6px;
+
+    background-color: rgb(60, 60, 61);
+    color: #efeff0;
+}
+
+.serverRow input[type='checkbox']
+{
+    display: inline-block;
+    -webkit-appearance: checkbox;
+}
+
+.addButton
+{
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 0;
+
+    display: inline-block;
+    width: 32px;
+
+    overflow: hidden;
+
+    background-color: #E83FB8;
+    color: transparent !important;
+
+    border-radius: 24px;
+
+    font-size: 0.5em;
+
+    transition: 0.3s all ease-in-out;
+}
+
+.addButton:hover
+{
+    width: 150px;
+    color: white !important;
+}
+
+.addButton img
+{
+    height: 24px;
+    display: inline;
+
+    padding: 4px;
+
+    vertical-align: text-top;
+}
+
+@media only screen and (max-width: 960px)
+{
+    header .icon
+    {
+        height: 72px;
+    }
+
+    nav ul br
+    {
+        display: none;
+    }
+
+    nav ul li
+    {
+        font-size: 1.25em;
+
+        display: inline-block;
+        width: 20%;
+
+        text-align: center;
+
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+}

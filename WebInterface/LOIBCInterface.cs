@@ -34,6 +34,8 @@ namespace LOIBC
                 .UseStartup<InterfaceStartup>()
                 .Build();
 
+            Log.Information("Started web interface on {url}", url);
+
             _webhost.Start();
         }
 

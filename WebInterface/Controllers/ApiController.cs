@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
+using LOIBC.SpamHeuristics;
+using LOIBC.WebInterface.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LOIBC.WebInterface.Controllers
@@ -16,9 +19,55 @@ namespace LOIBC.WebInterface.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Data()
+        public Dictionary<SpamHeuristic, float> Heuristics()
         {
-            return _bot.SpamHeuristics.Select(d => d.GetType().Name);
+            return _bot.RateMonitor.Heuristics.Heuristics;
+        }
+
+        [HttpGet]
+        public string InviteLink()
+        {
+            return $"https://discordapp.com/oauth2/authorize?client_id={_bot.Config.ClientId}&scope=bot&permissions=8";
+        }
+
+        [HttpGet]
+        public IEnumerable<DiscordServerInfo> ServerInfo()
+        {
+            return _bot.DiscordClient.Servers.Select(s => new DiscordServerInfo
+            {
+                Name = s.Name,
+                UserCount = s.UserCount,
+                Id = s.Id.ToString(),
+                Icon = s.IconUrl,
+                Channels = s.TextChannels
+                    .Where(d=>d.GetPermissionsRule(s.CurrentUser).ReadMessages != PermValue.Deny)
+                    .ToDictionary(d=>d.Name, d=>_bot.RateMonitor.ShouldMonitorChannel(d))
+            });
+        }
+
+        [HttpPost]
+        public void UpdateServerChannels([FromBody] DiscordServerInfo server)
+        {
+            foreach (var channel in server.Channels)
+            {
+                ulong channelId = _bot.DiscordClient
+                    .Servers
+                    .FirstOrDefault(d => d.Id.ToString() == server.Id)
+                    ?.TextChannels
+                    .FirstOrDefault(d => d.Name == channel.Key)
+                    ?.Id ?? 0;
+
+                if (channelId > 0)
+                {
+                    _bot.RateMonitor.ChannelsMonitored[channelId] = channel.Value;
+                }
+            }
+        }
+
+        [HttpGet]
+        public IEnumerable<MessageLog> Logs()
+        {
+            return _bot.RateMonitor.MessageLog.OrderByDescending(d => d.SentTime);
         }
     }
 }

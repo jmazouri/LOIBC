@@ -4,17 +4,109 @@
     <head>
         <title>LOIBC Administration</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.13/vue-router.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 
-        <link href="/css/cutestrap.min.css" type="text/css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width" />
+
+        <link href="/css/cutestrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="/css/admin.css" type="text/css" rel="stylesheet" />
     </head>
 
-    <body id="app">
-        <section class="wrapper-large">
-            <div class="grid--large">
-                <h3 v-for="Heuristic in Heuristics">{{Heuristic}}</h3>
+    <body id="app" class="wrapper-large">
+        <header>
+            <img class="icon" src="/img/icon.png"/>
+            <div id="headerTitle">LOIBC</div>
+            <div id="headerSub">Administration</div>
+            <div id="right">
+                <button v-on:click="refreshData()">Refresh</button>
             </div>
+        </header>
+
+        <section class="grid grid--large">
+            <nav class="column--light">
+                <ul>
+                    <li v-link="{path: '/home'}">Dashboard</li>
+                    <br/>
+                    <li v-link="{path: '/servers'}">Servers</li>
+                    <br />
+                    <li v-link="{path: '/logs'}">Logs</li>
+                    <br />
+                    <li v-link="{path: '/settings'}">Settings</li>
+                </ul>
+            </nav>
+
+            <main class="column--heavy">
+                <router-view></router-view>
+
+                <template id="serverTemplate">
+                    <h2>
+                        Servers
+                        <a v-bind:href="$router.app.InviteLink" class="addButton">
+                            <img src="/img/add.png"/>
+                            Add Server
+                        </a>
+                    </h2>
+
+                    <span class="serverRow" v-for="Server in $router.app.DiscordServers">
+                        <img v-bind:src="Server.icon"/>
+                        <span class="serverName">{{Server.name}}</span>
+                        <span class="super rounded" title="User Count">{{Server.userCount}}</span>
+                        <br />
+
+                        <label v-for="(ChannelName, ShouldMonitor) in Server.channels" title="Toggle Monitoring"
+                               v-on:change="$router.app.updateChannels(Server)" class="serverChannel rounded">
+                            <input type="checkbox" v-model="ShouldMonitor" />
+                            #{{ChannelName}}
+                        </label>
+                    </span>
+                </template>
+
+                <template id="settingsTemplate">
+                    <h2>Heuristics</h2>
+                    <ul>
+                        <li v-for="Heuristic in $router.app.Heuristics">{{Heuristic}}</li>
+                    </ul>
+                </template>
+
+                <template id="logTemplate">
+                    <h2 v-if="$router.app.Logs.length == 0">No Log Entries</h2>
+
+                    <div v-for="(ChannelName, LogEntries) in $router.app.Logs">
+                        <h3>#{{ChannelName}}</h3>
+                        <div id="logbox">
+                            <div class="logentry" v-for="LogEntry in LogEntries" v-on:click="LogEntry.showDetails = !LogEntry.showDetails"
+                                 v-bind:class="{ 'triggered': LogEntry.trigger }">
+
+                                <span class="timestamp">[{{LogEntry.sentTime | prettyDate}}]</span>
+                                <span class="spamvalue">[{{LogEntry.spamValue | round 2}}]</span>
+                                <span class="sender">{{LogEntry.senderName}}:</span>
+                                <span class="message">{{LogEntry.message}}</span>
+
+                                <div class="logdetail" v-if="LogEntry.showDetails">
+                                    <span class="spamvalue">
+                                        Value: {{LogEntry.spamValue}}, Calculation: {{LogEntry.formula}}
+                                        <template v-if="LogEntry.trigger">
+                                            , triggered {{LogEntry.trigger}}
+                                        </template>
+                                    </span>
+                                    <div class="logdetailentry" v-for="Detail in LogEntry.details">{{Detail}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </template>
+
+            </main>
         </section>
+
+        <footer>
+            Created by <a href="http://github.com/jmazouri">Jmazouri</a> | Icon provided by <a href="http://ic8.link/4089">Icons8</a>
+            <br/>
+            Running on {{DiscordServers.length}} server<template v-if="DiscordServers.length > 1">s</template>
+        </footer>
 
         <script src="/js/main.js"></script>
     </body>

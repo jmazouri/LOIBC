@@ -13,38 +13,38 @@ namespace LOIBC
 {
     public class LOIBCBot
     {
-        private DiscordClient _client;
-        private LOIBCConfig _config;
-        private MessageRateMonitor _rateMonitor;
+        public DiscordClient DiscordClient { get; private set; }
+        public readonly LOIBCConfig Config;
+        public MessageRateMonitor RateMonitor { get; private set; }
 
-        public IEnumerable<SpamHeuristic> SpamHeuristics => _rateMonitor.Heuristics.Heuristics.Select(d=>d.Key);
+        public IEnumerable<SpamHeuristic> SpamHeuristics => RateMonitor.Heuristics.Heuristics.Select(d=>d.Key);
 
         public LOIBCBot(LOIBCConfig config)
         {
-            _config = config;
+            Config = config;
 
             var discordConfig = new DiscordConfigBuilder
             {
                 AppName = "LOIBCBot"
             }.Build();
 
-            _client = new DiscordClient(discordConfig);
+            DiscordClient = new DiscordClient(discordConfig);
         }
 
         public async Task Connect()
         {
-            _client.MessageReceived += MessageReceived;
-            await _client.Connect(_config.BotKey);
+            DiscordClient.MessageReceived += MessageReceived;
+            await DiscordClient.Connect(Config.BotKey);
 
-            _rateMonitor = new MessageRateMonitor(_client);
+            RateMonitor = new MessageRateMonitor(DiscordClient);
         }
 
         private void MessageReceived(object sender, MessageEventArgs e)
         {
-            if (e.User.Id == _client.CurrentUser.Id) { return; }
+            if (e.User.Id == DiscordClient.CurrentUser.Id) { return; }
 
             Log.Logger.Verbose("{user}: {message}", e.Message.User.Name, e.Message.Text);
-            _rateMonitor.Analyze(e.Message);
+            RateMonitor.Analyze(e.Message);
         }
     }
 }

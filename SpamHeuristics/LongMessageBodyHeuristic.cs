@@ -10,7 +10,14 @@ namespace LOIBC.SpamHeuristics
     {
         public override float CalculateSpamValue(Message sentMessage, bool keepCached = true)
         {
-            return sentMessage.Text.Length * 0.05f;
+            float spamFactor = 0.05f;
+
+            if (sentMessage.Text.Length < 6)
+            {
+                spamFactor = 0.3f;
+            }
+
+            return sentMessage.Text.Length * spamFactor;
         }
     }
 }
