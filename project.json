@@ -5,7 +5,7 @@
     "preserveCompilationContext": true
   },
   "dependencies": {
-    "Discord.Net": "0.9.3.1",
+    "Discord.Net": "0.9.4",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Mvc.Formatters.Json": "1.0.0",
@@ -13,15 +13,13 @@
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0-rc2-3002702"
-    },
+    "Microsoft.NETCore.App": "1.0.0",
     "Newtonsoft.Json": "9.0.1",
     "Serilog": "2.0.0-rc-*",
-    "Serilog.Extensions.Logging": "1.0.0-rc2-10110",
-    "Serilog.Sinks.File": "2.0.0-rc-706",
-    "Serilog.Sinks.Literate": "2.0.0-rc-*"
+    "Serilog.Extensions.Logging": "1.0.0",
+    "Serilog.Sinks.File": "2.1.0",
+    "Serilog.Sinks.Literate": "2.0.0-rc-*",
+    "sqlite-net": "1.0.8"
   },
   "frameworks": {
     "netcoreapp1.0": {
