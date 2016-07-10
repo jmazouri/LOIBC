@@ -2,6 +2,17 @@
     return moment(value).format('MM-DD-YY HH:mm:ss');
 });
 
+Vue.filter('camelToSpace', function (value)
+{
+    return value.replace(/([A-Z])/g, ' $1')
+        .replace(/^./, function(str) { return str.toUpperCase(); });
+});
+
+Vue.filter('nameCleanup', function(value)
+{
+    return value.replace("LOIBC.SpamHeuristics.", "").replace("Heuristic", "");
+});
+
 Vue.filter('round', function(value, decimals)
 {
     return value.toFixed(decimals);
@@ -28,11 +39,6 @@ var App = Vue.extend({
                 body: JSON.stringify(server)
             }));
         },
-        camelToSpace: function(input)
-        {
-            return input.replace(/([A-Z])/g, ' $1')
-                        .replace(/^./, function(str) { return str.toUpperCase(); });
-        },
         refreshData: function()
         {
             var thisVue = this;
@@ -44,11 +50,7 @@ var App = Vue.extend({
             })
             .then(function (data)
             {
-                thisVue.Heuristics = _.map(_.keys(data),
-                    function (e)
-                    {
-                        return thisVue.camelToSpace(e.replace("LOIBC.SpamHeuristics.", "").replace("Heuristic", ""));
-                    });
+                thisVue.Heuristics = data;
             });
 
             fetch(new Request('/api/serverinfo'))

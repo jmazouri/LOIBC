@@ -27,13 +27,15 @@
         <section class="grid grid--large">
             <nav class="column--light">
                 <ul>
-                    <li v-link="{path: '/home'}">Dashboard</li>
-                    <br/>
-                    <li v-link="{path: '/servers'}">Servers</li>
-                    <br />
-                    <li v-link="{path: '/logs'}">Logs</li>
-                    <br />
-                    <li v-link="{path: '/settings'}">Settings</li>
+                    <li>
+                        <a v-link="{path: '/servers'}">Servers</a>
+                    </li>
+                    <li>
+                        <a v-link="{path: '/logs'}">Logs</a>
+                    </li>
+                    <li>
+                        <a v-link="{path: '/settings'}">Settings</a>
+                    </li>
                 </ul>
             </nav>
 
@@ -66,7 +68,9 @@
                 <template id="settingsTemplate">
                     <h2>Heuristics</h2>
                     <ul>
-                        <li v-for="Heuristic in $router.app.Heuristics">{{Heuristic}}</li>
+                        <li v-for="(Heuristic, Weight) in $router.app.Heuristics">
+                            {{Heuristic | nameCleanup | camelToSpace}} ({{Weight}}wt)
+                        </li>
                     </ul>
                 </template>
 
@@ -103,7 +107,7 @@
         </section>
 
         <footer>
-            Created by <a href="http://github.com/jmazouri">Jmazouri</a> | Icon provided by <a href="http://ic8.link/4089">Icons8</a>
+            Created by <a href="http://github.com/jmazouri">Jmazouri</a> | Icons provided by <a href="https://icons8.com/">Icons8</a>
             <br/>
             Running on {{DiscordServers.length}} server<template v-if="DiscordServers.length > 1">s</template>
         </footer>
