@@ -71,19 +71,21 @@ footer
     text-align: center;
 }
 
+main
+{
+    padding-left: 2rem !important;
+}
+
 nav
 {
-    padding: 0;
+    border-right: 4px double lightgray;
+    padding-right: 0 !important;
 }
 
 nav ul
 {
     list-style-type: none;
     margin-left: 0;
-
-    border-right: 4px dotted lightgray;
-
-    padding: 0.5rem 2rem 1rem 0.5rem;
 }
 
 nav ul li
@@ -101,14 +103,14 @@ nav ul li a, nav ul li a:visited
     color: rgb(60, 60, 61);
 
     text-decoration: none;
-    border-bottom: 4px dotted transparent;
+    border-bottom: 4px solid transparent;
 
     transition: all 0.1s ease-in-out;
 }
 
-nav ul li a:hover
+nav ul li a.v-link-active, nav ul li a:hover
 {
-    border-bottom: 4px dotted lightgray;
+    border-bottom: 4px solid lightgray;
 }
 
 #logbox
@@ -285,12 +287,15 @@ nav ul li a:hover
         padding-top: 12px;
     }
 
-    nav ul
+    nav
     {
         border-right: none;
         border-bottom: 4px dotted lightgray;
+    }
 
-        padding-bottom: 10px;
+    nav ul
+    {
+        padding-bottom: 0;
     }
 
     nav ul li

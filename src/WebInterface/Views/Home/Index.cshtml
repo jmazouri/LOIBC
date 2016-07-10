@@ -28,10 +28,10 @@
             <nav class="column--light">
                 <ul>
                     <li>
-                        <a v-link="{path: '/servers'}">Servers</a>
+                        <a v-link="{path: '/logs'}">Logs</a>
                     </li>
                     <li>
-                        <a v-link="{path: '/logs'}">Logs</a>
+                        <a v-link="{path: '/servers'}">Servers</a>
                     </li>
                     <li>
                         <a v-link="{path: '/settings'}">Settings</a>
@@ -75,7 +75,7 @@
                 </template>
 
                 <template id="logTemplate">
-                    <h2 v-if="$router.app.Logs.length == 0">No Log Entries</h2>
+                    <h3 v-if="$router.app.Logs.length == 0">No Log Entries</h3>
 
                     <div v-for="(ChannelName, LogEntries) in $router.app.Logs">
                         <h3>#{{ChannelName}}</h3>
@@ -107,7 +107,7 @@
         </section>
 
         <footer>
-            Created by <a href="http://github.com/jmazouri">Jmazouri</a> | Icons provided by <a href="https://icons8.com/">Icons8</a>
+            Created by <a href="http://jmazouri.com/">Jmazouri</a> | Icons provided by <a href="https://icons8.com/">Icons8</a>
             <br/>
             Running on {{DiscordServers.length}} server<template v-if="DiscordServers.length > 1">s</template>
         </footer>
