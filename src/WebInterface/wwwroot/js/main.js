@@ -111,6 +111,10 @@ var App = Vue.extend({
             Logs: [],
             InviteLink: ""
         };
+    },
+    ready: function()
+    {
+        router.go({ path: '/logs' });
     }
    
 });
