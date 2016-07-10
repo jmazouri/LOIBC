@@ -12,6 +12,12 @@ namespace LOIBC
 
         public int Limit { get; set; }
 
+        public delegate void ObjectEnqueue(T enqueued);
+        public event ObjectEnqueue ObjectEnqueueEvent;
+
+        public delegate void ObjectDequeue(T dequeued);
+        public event ObjectDequeue ObjectDequeueEvent;
+
         public FixedSizedQueue(int limit)
         {
             Limit = limit;
@@ -25,11 +31,18 @@ namespace LOIBC
         public void Enqueue(T obj)
         {
             _q.Enqueue(obj);
+
+            ObjectEnqueueEvent?.Invoke(obj);
+
             lock (this)
             {
                 T overflow;
-                while (_q.Count > Limit && _q.TryDequeue(out overflow)) ;
+                while (_q.Count > Limit && _q.TryDequeue(out overflow))
+                {
+                    ObjectDequeueEvent?.Invoke(overflow);
+                }
             }
         }
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿Vue.filter('prettyDate', function (value) {
-    return moment(value).format('MM-DD-YY H:mm:ss');
+    return moment(value).format('MM-DD-YY HH:mm:ss');
 });
 
 Vue.filter('round', function(value, decimals)

@@ -10,7 +10,7 @@ namespace LOIBC.SpamTriggers
     public abstract class SpamTrigger
     {
         public float TriggerScore { get; set; }
-        public bool PassThrough { get; set; }
+        public bool PassThrough { get; set; } = true;
 
         public virtual bool ShouldTrigger(float spamScore) => spamScore >= TriggerScore;
         public abstract void Trigger(DiscordClient client, Message message);

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SQLite;
 
-namespace LOIBC.WebInterface.ViewModels
+namespace LOIBC
 {
     public class DiscordServerInfo
     {
@@ -12,6 +13,7 @@ namespace LOIBC.WebInterface.ViewModels
         public int UserCount { get; set; }
         public string Icon { get; set; }
 
+        [Ignore]
         public Dictionary<string, bool> Channels { get; set; }
     }
 }

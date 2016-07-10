@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Threading.Tasks;
 using Discord;
+using LOIBC.Database;
 using LOIBC.SpamHeuristics;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -36,7 +37,11 @@ namespace LOIBC
             DiscordClient.MessageReceived += MessageReceived;
             await DiscordClient.Connect(Config.BotKey);
 
-            RateMonitor = new MessageRateMonitor(DiscordClient);
+            DatabaseContext dbContext = new DatabaseContext(new System.IO.FileInfo(Config.DatabasePath));
+            await dbContext.Initialize();
+
+            RateMonitor = new MessageRateMonitor(DiscordClient, dbContext);
+            await RateMonitor.LoadFromDb();
         }
 
         private void MessageReceived(object sender, MessageEventArgs e)

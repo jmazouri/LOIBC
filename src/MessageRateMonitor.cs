@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using LOIBC.Database;
 using LOIBC.SpamHeuristics;
 using LOIBC.SpamTriggers;
-using LOIBC.WebInterface.ViewModels;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -25,11 +25,12 @@ namespace LOIBC
             }
         };
 
-        private FixedSizedQueue<MessageLog> _messages = new FixedSizedQueue<MessageLog>(5000);
+        private DatabaseContext _dbContext;
 
-        public IEnumerable<MessageLog> MessageLog => _messages.AsEnumerable();
+        private List<MessageLog> _messages = new List<MessageLog>();
+        public ReadOnlyCollection<MessageLog> MessageLog => _messages.AsReadOnly();
 
-        public Dictionary<ulong, bool> ChannelsMonitored { get; set; }
+        private Dictionary<ulong, bool> _channelsMonitored { get; set; }
 
         public List<SpamTrigger> Triggers = new List<SpamTrigger>
         {
@@ -49,7 +50,7 @@ namespace LOIBC
 
         private readonly DiscordClient _client;
 
-        public MessageRateMonitor(DiscordClient client)
+        public MessageRateMonitor(DiscordClient client, DatabaseContext dbContext)
         {
             if (client == null)
             {
@@ -61,16 +62,42 @@ namespace LOIBC
                 throw new InvalidOperationException("Discord client must be connected");
             }
 
-            ChannelsMonitored = new Dictionary<ulong, bool>();
+            _channelsMonitored = new Dictionary<ulong, bool>();
 
+            _dbContext = dbContext;
             _client = client;
+        }
+
+        public async Task LoadFromDb()
+        {
+            _messages.Clear();
+            _messages.AddRange(await _dbContext.GetLogMessages());
+
+            _channelsMonitored.Clear();
+
+            foreach (MonitoredChannel channel in await _dbContext.GetMonitoredChannels())
+            {
+                _channelsMonitored.Add(channel.ChannelId, channel.IsMonitored);
+            }
+        }
+
+        private async Task StoreMessage(MessageLog message)
+        {
+            _messages.Add(message);
+            await _dbContext.InsertLogMessage(message);
         }
 
         //Check if dictionary contains the channel, and return the value if found
         //else return true
-        public bool ShouldMonitorChannel(Channel ch) => !ChannelsMonitored.ContainsKey(ch.Id) || ChannelsMonitored[ch.Id];
+        public bool ShouldMonitorChannel(Channel ch) => !_channelsMonitored.ContainsKey(ch.Id) || _channelsMonitored[ch.Id];
 
-        public void Analyze(Message message)
+        public async Task SetChannelMonitor(MonitoredChannel channel)
+        {
+            _channelsMonitored[channel.ChannelId] = channel.IsMonitored;
+            await _dbContext.UpdateChannelMonitoring(channel);
+        }
+
+        public async void Analyze(Message message)
         {
             if (!ShouldMonitorChannel(message.Channel))
             {
@@ -142,7 +169,7 @@ namespace LOIBC
                 }
             }
 
-            _messages.Enqueue(toLog);
+            await StoreMessage(toLog);
         }
     }
 }

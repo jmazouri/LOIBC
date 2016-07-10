@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using LOIBC.SpamHeuristics;
-using LOIBC.WebInterface.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LOIBC.WebInterface.Controllers
@@ -46,7 +45,7 @@ namespace LOIBC.WebInterface.Controllers
         }
 
         [HttpPost]
-        public void UpdateServerChannels([FromBody] DiscordServerInfo server)
+        public async Task UpdateServerChannels([FromBody] DiscordServerInfo server)
         {
             foreach (var channel in server.Channels)
             {
@@ -59,7 +58,11 @@ namespace LOIBC.WebInterface.Controllers
 
                 if (channelId > 0)
                 {
-                    _bot.RateMonitor.ChannelsMonitored[channelId] = channel.Value;
+                    await _bot.RateMonitor.SetChannelMonitor(new MonitoredChannel
+                    {
+                        ChannelId = channelId,
+                        IsMonitored = channel.Value
+                    });
                 }
             }
         }

@@ -214,10 +214,6 @@ namespace SQLite
 
             DatabasePath = databasePath;
 
-#if NETFX_CORE
-			SQLite3.SetDirectory(/*temp directory type*/2, Windows.Storage.ApplicationData.Current.TemporaryFolder.Path);
-#endif
-
             Sqlite3DatabaseHandle handle;
 
 #if SILVERLIGHT || USE_CSHARP_SQLITE || USE_SQLITEPCL_RAW
@@ -1765,20 +1761,13 @@ namespace SQLite
         public string DatabasePath { get; private set; }
         public bool StoreDateTimeAsTicks { get; private set; }
 
-#if NETFX_CORE
-		static readonly string MetroStyleDataPath = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
-#endif
 
         public SQLiteConnectionString(string databasePath, bool storeDateTimeAsTicks)
         {
             ConnectionString = databasePath;
             StoreDateTimeAsTicks = storeDateTimeAsTicks;
 
-#if NETFX_CORE
-			DatabasePath = System.IO.Path.Combine (MetroStyleDataPath, databasePath);
-#else
             DatabasePath = databasePath;
-#endif
         }
     }
 
@@ -2158,6 +2147,10 @@ namespace SQLite
             {
                 return "integer";
             }
+            else if (clrType == typeof(UInt64))
+            {
+                return "bigint";
+            }
             else if (clrType == typeof(Single) || clrType == typeof(Double) || clrType == typeof(Decimal))
             {
                 return "float";
@@ -2509,7 +2502,7 @@ namespace SQLite
                 {
                     SQLite3.BindInt(stmt, index, (bool)value ? 1 : 0);
                 }
-                else if (value is UInt32 || value is Int64)
+                else if (value is UInt32 || value is Int64 || value is UInt64)
                 {
                     SQLite3.BindInt64(stmt, index, Convert.ToInt64(value));
                 }
@@ -2623,6 +2616,10 @@ namespace SQLite
 				} else if (clrType.GetTypeInfo().IsEnum) {
 #endif
                     return SQLite3.ColumnInt(stmt, index);
+                }
+                else if (clrType == typeof(UInt64))
+                {
+                    return (ulong)SQLite3.ColumnInt64(stmt, index);
                 }
                 else if (clrType == typeof(Int64))
                 {
@@ -3473,7 +3470,7 @@ namespace SQLite
             Serialized = 3
         }
 
-        const string LibraryPath = "sqlite3";
+        const string LibraryPath = "lib/sqlite3";
 
 #if !USE_CSHARP_SQLITE && !USE_WP8_NATIVE_SQLITE && !USE_SQLITEPCL_RAW
         [DllImport(LibraryPath, EntryPoint = "sqlite3_threadsafe", CallingConvention = CallingConvention.Cdecl)]

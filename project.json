@@ -2,9 +2,19 @@
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "copyToOutput": {
+      "mappings": {
+        "sqlite3.dll": "./lib/sqlite3.dll"
+      }
+    },
+    "define": [ "NETFX_CORE" ]
   },
   "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
     "Discord.Net": "0.9.4",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
@@ -13,7 +23,6 @@
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.NETCore.App": "1.0.0",
     "Newtonsoft.Json": "9.0.1",
     "Serilog": "2.0.0-rc-*",
     "Serilog.Extensions.Logging": "1.0.0",

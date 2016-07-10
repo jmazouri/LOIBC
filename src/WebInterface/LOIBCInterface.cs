@@ -26,6 +26,9 @@ namespace LOIBC
             _webhost = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "WebInterface"))
+#if DEBUG
+                .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "src", "WebInterface"))
+#endif
                 .UseUrls(url)
                 .ConfigureServices(collection =>
                 {
