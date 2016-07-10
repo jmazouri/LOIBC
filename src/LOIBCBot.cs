@@ -37,7 +37,7 @@ namespace LOIBC
             DiscordClient.MessageReceived += MessageReceived;
             await DiscordClient.Connect(Config.BotKey);
 
-            DatabaseContext dbContext = new DatabaseContext(new System.IO.FileInfo(Config.DatabasePath));
+            IDatabaseContext dbContext = new SqliteDatabaseContext(new System.IO.FileInfo(Config.DatabasePath));
             await dbContext.Initialize();
 
             RateMonitor = new MessageRateMonitor(DiscordClient, dbContext);

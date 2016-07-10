@@ -9,13 +9,13 @@ using SQLite;
 
 namespace LOIBC.Database
 {
-    public class DatabaseContext
+    public class SqliteDatabaseContext : IDatabaseContext
     {
         public bool IsInitialized { get; private set; }
 
         private SQLiteAsyncConnection _connection;
 
-        public DatabaseContext(FileInfo databasePath)
+        public SqliteDatabaseContext(FileInfo databasePath)
         {
             _connection = new SQLiteAsyncConnection(databasePath.ToString());
         }

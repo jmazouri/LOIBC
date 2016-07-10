@@ -25,7 +25,7 @@ namespace LOIBC
             }
         };
 
-        private DatabaseContext _dbContext;
+        private IDatabaseContext _dbContext;
 
         private List<MessageLog> _messages = new List<MessageLog>();
         public ReadOnlyCollection<MessageLog> MessageLog => _messages.AsReadOnly();
@@ -50,7 +50,7 @@ namespace LOIBC
 
         private readonly DiscordClient _client;
 
-        public MessageRateMonitor(DiscordClient client, DatabaseContext dbContext)
+        public MessageRateMonitor(DiscordClient client, IDatabaseContext dbContext)
         {
             if (client == null)
             {

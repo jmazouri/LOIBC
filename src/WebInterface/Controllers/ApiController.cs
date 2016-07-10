@@ -39,7 +39,6 @@ namespace LOIBC.WebInterface.Controllers
                 Id = s.Id.ToString(),
                 Icon = s.IconUrl,
                 Channels = s.TextChannels
-                    .Where(d=>d.GetPermissionsRule(s.CurrentUser).ReadMessages != PermValue.Deny)
                     .ToDictionary(d=>d.Name, d=>_bot.RateMonitor.ShouldMonitorChannel(d))
             });
         }
