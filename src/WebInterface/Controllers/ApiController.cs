@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using LOIBC.SpamHeuristics;
+using LOIBC.SpamTriggers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LOIBC.WebInterface.Controllers
@@ -27,6 +28,12 @@ namespace LOIBC.WebInterface.Controllers
         public string InviteLink()
         {
             return $"https://discordapp.com/oauth2/authorize?client_id={_bot.Config.ClientId}&scope=bot&permissions=8";
+        }
+
+        [HttpGet]
+        public IEnumerable<SpamTrigger> Triggers()
+        {
+            return _bot.RateMonitor.Triggers;
         }
 
         [HttpGet]

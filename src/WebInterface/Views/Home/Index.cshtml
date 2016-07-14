@@ -3,10 +3,10 @@
 
     <head>
         <title>LOIBC Administration</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.13/vue-router.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+        <script src="/js/vendor/vue.js"></script>
+        <script src="/js/vendor/vue-router.js"></script>
+        <script src="/js/vendor/moment.js"></script>
+        <script src="/js/vendor/lodash.min.js"></script>
 
         <meta name="viewport" content="width=device-width" />
 
@@ -51,8 +51,8 @@
                         </a>
                     </h2>
 
-                    <span class="serverRow" v-for="Server in $router.app.DiscordServers">
-                        <img v-bind:src="Server.icon"/>
+                    <div class="serverRow" v-for="Server in $router.app.DiscordServers">
+                        <img class="serverIcon" v-bind:src="Server.icon"/>
                         <span class="serverName">{{Server.name}}</span>
                         <span class="super rounded" title="User Count">{{Server.userCount}}</span>
                         <br />
@@ -62,7 +62,7 @@
                             <input type="checkbox" v-model="ShouldMonitor" />
                             #{{ChannelName}}
                         </label>
-                    </span>
+                    </div>
                 </template>
 
                 <template id="settingsTemplate">
@@ -72,13 +72,23 @@
                             {{Heuristic | nameCleanup | camelToSpace}} ({{Weight}}wt)
                         </li>
                     </ul>
+                    <h2>Triggers</h2>
+                    <ul>
+                        <li v-for="Trigger in $router.app.Triggers">
+                            {{Trigger.name | camelToSpace}} ({{Trigger.triggerScore}} score)
+                        </li>
+                    </ul>
                 </template>
 
                 <template id="logTemplate">
                     <h3 v-if="$router.app.Logs.length == 0">No Log Entries</h3>
 
                     <div v-for="(ChannelName, LogEntries) in $router.app.Logs">
-                        <h3>#{{ChannelName}}</h3>
+                        <h3>
+                            <a v-link="{path: '/servers'}"><img class="serverIcon smaller" v-bind:alt="LogEntries[0].server.name" v-bind:title="LogEntries[0].server.name" v-bind:src="LogEntries[0].server.icon" /></a>
+                            #{{ChannelName}}
+                        </h3>
+
                         <div id="logbox">
                             <div class="logentry" v-for="LogEntry in LogEntries" v-on:click="LogEntry.showDetails = !LogEntry.showDetails"
                                  v-bind:class="{ 'triggered': LogEntry.trigger }">

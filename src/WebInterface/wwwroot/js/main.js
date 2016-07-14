@@ -24,7 +24,7 @@ var App = Vue.extend({
     el: function () { return '#app'; },
     created: function ()
     {
-        this.refreshData();
+        this.refreshServerInfo();
     },
     methods:
     {
@@ -39,7 +39,7 @@ var App = Vue.extend({
                 body: JSON.stringify(server)
             }));
         },
-        refreshData: function()
+        refreshHeuristics: function ()
         {
             var thisVue = this;
 
@@ -52,6 +52,21 @@ var App = Vue.extend({
             {
                 thisVue.Heuristics = data;
             });
+        },
+        refreshTriggers: function () {
+            var thisVue = this;
+
+            fetch(new Request('/api/triggers'))
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                thisVue.Triggers = data;
+            });
+        },
+        refreshServerInfo: function ()
+        {
+            var thisVue = this;
 
             fetch(new Request('/api/serverinfo'))
             .then(function (response)
@@ -62,6 +77,10 @@ var App = Vue.extend({
             {
                 thisVue.DiscordServers = data;
             });
+        },
+        refreshInviteLink: function ()
+        {
+            var thisVue = this;
 
             fetch(new Request('/api/invitelink'))
             .then(function (response)
@@ -72,6 +91,10 @@ var App = Vue.extend({
             {
                 thisVue.InviteLink = data;
             });
+        },
+        refreshLogs: function ()
+        {
+            var thisVue = this;
 
             fetch(new Request('/api/logs'))
             .then(function (response)
@@ -101,12 +124,21 @@ var App = Vue.extend({
                 }
                 
             });
+        },
+        refreshData: function()
+        {
+            this.refreshHeuristics();
+            this.refreshTriggers();
+            this.refreshInviteLink();
+            this.refreshServerInfo();
+            this.refreshLogs();
         }
     },
     data: function()
     {
         return {
             Heuristics: {},
+            Triggers: {},
             DiscordServers: {},
             Logs: [],
             InviteLink: ""
@@ -114,9 +146,13 @@ var App = Vue.extend({
     },
     ready: function()
     {
-        router.go({ path: '/logs' });
+        
     }
    
+});
+
+router.redirect({
+    '*': '/logs'
 });
 
 router.map(
@@ -125,28 +161,53 @@ router.map(
     {
         component:
         {
-            template: '#logTemplate'
+            template: '#logTemplate',
+            route:
+            {
+                activate: function (transition) {
+                    transition.to.router.app.refreshLogs();
+                    transition.next();
+                }
+            }
         }
     },
     '/settings':
     {
         component:
         {
-            template: '#settingsTemplate'
+            template: '#settingsTemplate',
+            route:
+            {
+                activate: function (transition)
+                {
+                    transition.to.router.app.refreshHeuristics();
+                    transition.to.router.app.refreshTriggers();
+                    transition.next();
+                }
+            }
         }
     },
     '/servers':
     {
         component:
         {
-            template: '#serverTemplate'
+            template: '#serverTemplate',
+            route:
+            {
+                activate: function (transition)
+                {
+                    transition.to.router.app.refreshServerInfo();
+                    transition.to.router.app.refreshInviteLink();
+                    transition.next();
+                }
+            }
         }
     }
 });
 
 router.beforeEach(function(transition)
 {
-    transition.to.router.app.refreshData();
+    //transition.to.router.app.refreshServerInfo();
     transition.next();
 });
 

@@ -184,12 +184,22 @@ nav ul li a.v-link-active, nav ul li a:hover
     color: white;
 }
 
-.serverRow img
+.serverRow
+{
+    margin-bottom: 16px;
+}
+
+.serverIcon
 {
     display: inline-block;
     height: 48px;
 
     border-radius: 8px;
+}
+
+.serverIcon.smaller
+{
+    height: 32px;
 }
 
 .serverName

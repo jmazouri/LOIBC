@@ -13,6 +13,7 @@ namespace LOIBC.SpamTriggers
         public bool PassThrough { get; set; } = true;
 
         public virtual bool ShouldTrigger(float spamScore) => spamScore >= TriggerScore;
+        public virtual string Name => GetType().Name;
         public abstract void Trigger(DiscordClient client, Message message);
     }
 }

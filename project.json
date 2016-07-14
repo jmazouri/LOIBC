@@ -15,7 +15,7 @@
       "version": "1.0.0",
       "type": "platform"
     },
-    "Discord.Net": "0.9.4",
+    "Discord.Net": "0.9.*",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Mvc.Formatters.Json": "1.0.0",
